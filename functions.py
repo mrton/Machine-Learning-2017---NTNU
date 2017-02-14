@@ -30,6 +30,7 @@ def gradient_descent(X, y, w, n, m, numIterations, learning_rate):
         w = w - learning_rate*cost
     return (w.T,error_ce)
 
+# Does not work with 5 weights
 def predict(w,X,y):
     z = np.dot(X,w.T)
     sigma = sigmoid(z)
@@ -39,6 +40,8 @@ def predict(w,X,y):
     for i in range(n):
         if y[i][0] == predict[i]:
             score += 1
+    print(y)
+    print(predict)
     print("scored: "+ str((score/n)*100)+"%")
 
 def cross_entropy_error(n,y,sigma):

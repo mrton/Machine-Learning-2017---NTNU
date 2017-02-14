@@ -41,8 +41,7 @@ def main():
     # Predicting test data
     print(w)
     predict(w,X_test,y_test)
-
-
+    
     # Plotting training data
     fig = plt.figure()
     ax = fig.add_subplot(221)
