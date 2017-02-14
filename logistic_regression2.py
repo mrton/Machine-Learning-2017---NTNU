@@ -24,13 +24,17 @@ def main():
     # Running gradient descent
     w , e = gradient_descent(X, y, w, n, m, numIterations, learning_rate)
 
-    print(w)
-    '''
     # Formatting test
-    n = cl_test2.shape[0]
-    m = cl_test2.shape[1]
-    X_test1 = np.hstack([np.ones((n,1)), cl_test2[0:,:m-1]])
-    y_test1 = cl_test2[0:,m-1:m]
+    n,m = cl_test2.shape
+    x0 = np.ones((n,1))
+    x1 = cl_test2[:,0].reshape(n,1)
+    x2 = cl_test2[:,1].reshape(n,1)
+    x3 = (x1*x1).reshape(n,1)
+    x4 = (x2*x2).reshape(n,1)
+    X = np.hstack([x0,x1,x2,x3,x4])
+    m = X.shape[1]
+    w = np.ones(m).reshape(m,1)
+
 
     # Predicting test data
     predict(w,X_test1,y_test1)
