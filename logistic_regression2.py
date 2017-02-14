@@ -5,30 +5,27 @@ def main():
     cl_test2 = np.genfromtxt('./datasets/classification/cl-test-2.csv', delimiter=",")
     cl_train2 = np.genfromtxt('./datasets/classification/cl-train-2.csv', delimiter=",")
 
-    n = cl_train2.shape[0]
+    # Formatting training data
+    n,m = cl_train2.shape
+    y = cl_train2[0:,m-1:m]
     x0 = np.ones((n,1))
     x1 = cl_train2[:,0].reshape(n,1)
     x2 = cl_train2[:,1].reshape(n,1)
     x3 = (x1*x1).reshape(n,1)
     x4 = (x2*x2).reshape(n,1)
-
     X = np.hstack([x0,x1,x2,x3,x4])
-    '''
+    m = X.shape[1]
+    w = np.ones(m).reshape(m,1)
+
     #Setting iteration number and learning rate
     numIterations = 10000
-    learning_rate = 0.015
-
-    # Formatting training data
-    n = cl_train2.shape[0]
-    m = cl_train2.shape[1]
-    X = np.hstack([np.ones((n,1)), cl_train2[0:,:m-1]])
-    y = cl_train2[0:,m-1:m]
-    w = np.ones(m)
-    w = w.reshape(m,1)
+    learning_rate = 0.01
 
     # Running gradient descent
     w , e = gradient_descent(X, y, w, n, m, numIterations, learning_rate)
 
+    print(w)
+    '''
     # Formatting test
     n = cl_test2.shape[0]
     m = cl_test2.shape[1]
