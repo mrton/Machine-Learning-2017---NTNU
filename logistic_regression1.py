@@ -52,7 +52,7 @@ def main():
     ax.axis([0, 1, 0, 1])
 
     # Plotting cross entropy error
-    bx = fig.add_subplot(222, facecolor='#fff2f2')
+    bx = fig.add_subplot(222)
     bx.set_title('Cross entropy error')
     bx.plot(range(1,numIterations + 1 ,1), e,  c='b')
     bx.axis([0, len(e), 0, 1])
