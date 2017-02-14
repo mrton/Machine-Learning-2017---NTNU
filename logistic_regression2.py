@@ -5,9 +5,18 @@ def main():
     cl_test2 = np.genfromtxt('./datasets/classification/cl-test-2.csv', delimiter=",")
     cl_train2 = np.genfromtxt('./datasets/classification/cl-train-2.csv', delimiter=",")
 
+    n = cl_train2.shape[0]
+    x0 = np.ones((n,1))
+    x1 = cl_train2[:,0].reshape(n,1)
+    x2 = cl_train2[:,1].reshape(n,1)
+    x3 = (x1*x1).reshape(n,1)
+    x4 = (x2*x2).reshape(n,1)
+
+    X = np.hstack([x0,x1,x2,x3,x4])
+    '''
     #Setting iteration number and learning rate
-    numIterations = 1000
-    learning_rate = 0.01
+    numIterations = 10000
+    learning_rate = 0.015
 
     # Formatting training data
     n = cl_train2.shape[0]
@@ -42,11 +51,6 @@ def main():
     ax = fig.add_subplot(221)
     scatter_plot(cl_test2,ax,shape='v',positive_color='g', negative_color='r',dotsize=2)
 
-    # Plotting decision boundary
-    w1,w2,w3 = w.T
-    x1 = np.arange(0., 1, .1)
-    ax.plot(x1, (-w1 -w2*x1)/w3, '#0078a5')
-    ax.axis([0, 1, 0, 1])
 
     # Plotting cross entropy error
     bx = fig.add_subplot(222, facecolor='#fff2f2')
@@ -57,4 +61,5 @@ def main():
     bx.set_ylabel('error')
     plt.tight_layout()
     plt.show()
+    '''
 main()
