@@ -55,7 +55,6 @@ X_test_2d = np.hstack([ np.ones((N_train2d,1)) , X_test_2d])
 mse = mean_square_error(w2d, X_test_2d, y_test_2d)
 print("test2D: " + str(mse))
 
-
 # Plotting 1D result
 
 # Converting to lists
