@@ -24,6 +24,7 @@ N = y_train_1d.size
 X_train_1d = np.hstack([ np.ones((N,1)) , X_train_1d])
 # Calculating weights with 1D training data
 w1d = calc_weights(X_train_1d, y_train_1d)
+print(w1d)
 # Calculating mean square error for 1D training data
 mse = mean_square_error(w1d,X_train_1d,y_train_1d)
 print("training1D: " + str(mse))
@@ -43,6 +44,7 @@ N = y_train_2d.size
 X_train_2d = np.hstack([ np.ones((N,1)) , X_train_2d])
 # Calculating weights with 2D training data
 w2d = calc_weights(X_train_2d, y_train_2d)
+print(w2d)
 # Calculating mean square error for 2D training data
 mse = mean_square_error(w2d, X_train_2d, y_train_2d)
 print("training2D: " + str(mse))
