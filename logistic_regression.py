@@ -56,6 +56,12 @@ X_test1 = np.hstack([np.ones((n,1)), cl_test1[0:,:m-1]])
 y_test1 = cl_test1[0:,m-1:m]
 predict(w,X_test1,y_test1)
 
+
+plt.plot(range(0,len(e),1), e, 'r--')
+plt.axis([0, len(e), 0, 1])
+plt.show()
+
+
 '''
 # For plotting
 positive = []
