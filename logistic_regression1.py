@@ -1,45 +1,63 @@
+from functions import *
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
 
-def scatter_plot(data,ax,shape,positive_color,negative_color,dotsize):
-    # Dot area/size
-    area = np.pi * (dotsize**2)
-    rows, colms = data.shape
-    for i in range(rows):
-        if data[i][colms-1] == 1:
-            ax.scatter(data[i][0], data[i][1],s = area, c=positive_color,alpha=0.5,marker=shape)
-        else:
-            ax.scatter(data[i][0], data[i][1],s = area, c=negative_color,alpha=0.5,marker=shape)
+def main():
+    # Loading data
+    cl_test1 = np.genfromtxt('./datasets/classification/cl-test-1.csv', delimiter=",")
+    cl_train1 = np.genfromtxt('./datasets/classification/cl-train-1.csv', delimiter=",")
 
-def sigmoid(z):
-    return 1 / (1 + np.exp(-z))
+    #Setting iteration number and learning rate
+    numIterations = 1000
+    learning_rate = 0.01
 
-def compute_cost(loss,X):
-    cost = X*loss
-    cost_sum = cost.sum(0)
-    return cost_sum.reshape(cost_sum.shape[0],1)
+    # Formatting training data
+    n = cl_train1.shape[0]
+    m = cl_train1.shape[1]
+    X = np.hstack([np.ones((n,1)), cl_train1[0:,:m-1]])
+    y = cl_train1[0:,m-1:m]
+    w = np.ones(m)
+    w = w.reshape(m,1)
 
-def gradient_descent(X, y, w, n, m, numIterations, learning_rate):
-    error_ce = []
-    for i in range(numIterations):
-        sigma = sigmoid(np.dot(X, w))
-        loss = sigma - y
-        error_ce.append(cross_entropy_error(n,y,sigma))
-        cost = compute_cost(loss,X)
-        w = w - learning_rate*cost
-    return (w.T,error_ce)
+    # Running gradient descent
+    w , e = gradient_descent(X, y, w, n, m, numIterations, learning_rate)
 
-def predict(w,X,y):
-    z = np.dot(X,w.T)
-    sigma = sigmoid(z)
-    predict = np.array(list(map(lambda x : 1 if x>0.5 else 0, sigma )))
-    n = y.shape[0]
-    score = 0
-    for i in range(n):
-        if y[i][0] == predict[i]:
-            score += 1
-    print("scored: "+ str((score/n)*100)+"%")
+    # Formatting test
+    n = cl_test1.shape[0]
+    m = cl_test1.shape[1]
+    X_test1 = np.hstack([np.ones((n,1)), cl_test1[0:,:m-1]])
+    y_test1 = cl_test1[0:,m-1:m]
 
-def cross_entropy_error(n,y,sigma):
-    return(-(1/n)*np.sum(y*np.log(sigma) + (1-y)*np.log(1-sigma)))
+    # Predicting test data
+    predict(w,X_test1,y_test1)
+
+    # Plotting training data
+    fig = plt.figure()
+    ax = fig.add_subplot(221)
+    fig.subplots_adjust(top=0.85)
+    ax.set_title('Decision boundary')
+    scatter_plot(cl_train1,ax,shape='.',positive_color='#40cc49', negative_color='#ff6666',dotsize=5)
+    ax.set_xlabel('x1')
+    ax.set_ylabel('x2')
+
+    # Plotting test boundary
+    ax = fig.add_subplot(221)
+    scatter_plot(cl_test1,ax,shape='v',positive_color='g', negative_color='r',dotsize=2)
+
+    # Plotting decision boundary
+    w1,w2,w3 = w.T
+    x1 = np.arange(0., 1, .1)
+    ax.plot(x1, (-w1 -w2*x1)/w3, '#0078a5')
+    ax.axis([0, 1, 0, 1])
+
+    # Plotting cross entropy error
+    bx = fig.add_subplot(222, facecolor='#fff2f2')
+    bx.set_title('Cross entropy error')
+    bx.plot(range(1,numIterations + 1 ,1), e,  c='b')
+    bx.axis([0, len(e), 0, 1])
+    bx.set_xlabel('iterations')
+    bx.set_ylabel('error')
+    plt.tight_layout()
+    plt.show()
+main()
