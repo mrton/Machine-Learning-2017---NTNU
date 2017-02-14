@@ -2,10 +2,52 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
 
-cl_test1 = np.genfromtxt('./datasets/classification/cl-test-1.csv', delimiter=",")
-cl_test2 = np.genfromtxt('./datasets/classification/cl-test-2.csv', delimiter=",")
-cl_train1 = np.genfromtxt('./datasets/classification/cl-train-1.csv', delimiter=",")
-cl_train2 = np.genfromtxt('./datasets/classification/cl-train-2.csv', delimiter=",")
+
+def main():
+
+
+
+    cl_test1 = np.genfromtxt('./datasets/classification/cl-test-1.csv', delimiter=",")
+    cl_test2 = np.genfromtxt('./datasets/classification/cl-test-2.csv', delimiter=",")
+    cl_train1 = np.genfromtxt('./datasets/classification/cl-train-1.csv', delimiter=",")
+    cl_train2 = np.genfromtxt('./datasets/classification/cl-train-2.csv', delimiter=",")
+
+    numIterations = 1000
+    learning_rate = 0.01
+
+    n = cl_train1.shape[0]
+    m = cl_train1.shape[1]
+    X = np.hstack([np.ones((n,1)), cl_train1[0:,:m-1]])
+    y = cl_train1[0:,m-1:m]
+    w = np.ones(m)
+    w = w.reshape(m,1)
+
+    # Running gradient descent
+    w , e = gradient_descent(X, y, w, n, m, numIterations, learning_rate)
+
+    n = cl_test1.shape[0]
+    m = cl_test1.shape[1]
+    X_test1 = np.hstack([np.ones((n,1)), cl_test1[0:,:m-1]])
+    y_test1 = cl_test1[0:,m-1:m]
+    predict(w,X_test1,y_test1)
+
+    fig = plt.figure()
+    ax = fig.add_subplot(221)
+    scatter_plot(cl_train1,ax)
+    bx = fig.add_subplot(222, facecolor='#fff2f2') # creates 2nd subplot with yellow background
+    bx.plot(range(1,numIterations + 1 ,1), e,  c='b')
+    bx.axis([0, len(e), 0, 1])
+    plt.show()
+
+def scatter_plot(data,ax):
+    #dot area/size
+    area = np.pi * (4**2)
+    rows, colms = data.shape
+    for i in range(rows):
+        if data[i][colms-1] == 1:
+            ax.scatter(data[i][0], data[i][1],s = area, c='#40cc49')
+        else:
+            ax.scatter(data[i][0], data[i][1],s = area, c='#ff6666')
 
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
@@ -40,23 +82,4 @@ def predict(w,X,y):
 def cross_entropy_error(n,y,sigma):
     return(-(1/n)*np.sum(y*np.log(sigma) + (1-y)*np.log(1-sigma)))
 
-
-n = cl_train1.shape[0]
-m = cl_train1.shape[1]
-X = np.hstack([np.ones((n,1)), cl_train1[0:,:m-1]])
-y = cl_train1[0:,m-1:m]
-w = np.ones(m)
-w = w.reshape(m,1)
-w , e = gradient_descent(X, y, w, n, m, numIterations=1000, learning_rate=0.01)
-
-
-n = cl_test1.shape[0]
-m = cl_test1.shape[1]
-X_test1 = np.hstack([np.ones((n,1)), cl_test1[0:,:m-1]])
-y_test1 = cl_test1[0:,m-1:m]
-predict(w,X_test1,y_test1)
-
-
-plt.plot(range(0,len(e),1), e, 'r--')
-plt.axis([0, len(e), 0, 1])
-plt.show()
+main()
